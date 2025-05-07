@@ -1,0 +1,39 @@
+version: "3.1"
+
+stories:
+  - story: order flow - ask quantity path
+    steps:
+      - intent: ask_menu
+      - action: action_show_menu
+      - intent: order_food_specific # User: "tôi muốn gọi phở bò"
+        entities:
+          - dish: "phở bò"
+      - slot_was_set: # Đảm bảo slot dish được set
+          - dish: "phở bò"
+      - action: action_ask_quantity # Bot: "Bạn muốn mấy suất ạ?" (Cần tạo action này hoặc dùng utter_)
+      - intent: specify_quantity # User: "2 suất"
+        entities:
+          - quantity: 2
+      - slot_was_set: # Đảm bảo slot quantity được set
+          - quantity: 2
+      - action: action_add_to_order
+      - action: action_show_order
+      - action: action_listen
+      - intent: affirm
+      - action: action_execute_order
+
+  - story: modify then cancel order
+    steps:
+      - intent: order_food_specific
+        entities:
+          - dish: "cơm gà"
+      - action: action_add_to_order
+      - action: action_show_order
+      - intent: specify_quantity
+        entities:
+          - quantity: 3
+      - action: action_add_to_order
+      - action: action_show_order
+      - action: action_listen
+      - intent: deny
+      - action: action_cancel_order

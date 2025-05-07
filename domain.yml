@@ -1,0 +1,83 @@
+version: "3.1"
+
+assistant_id: "restaurant_bot"
+language: "vi"
+
+intents:
+  - greet
+  - goodbye
+  - ask_menu
+  - order_food
+  - specify_quantity
+  - order_food_specific
+  - ask_opening_hours
+  - ask_promotion
+  - cancel_order
+  - thanks
+  - fallback
+  - affirm
+  - deny
+
+entities:
+  - dish
+  - quantity
+  - fallback_count
+  - order_list
+
+slots:
+  fallback_count:
+    type: float # Hoặc any. float thường dùng cho số trong Rasa
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: fallback_count
+  dish:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: dish
+  quantity:
+    type: float
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: quantity
+  order_list:
+    type: list
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: order_list
+
+responses:
+  utter_greet:
+    - text: "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?"
+  utter_goodbye:
+    - text: "Cảm ơn bạn đã ghé thăm! Hẹn gặp lại."
+  utter_ask_menu:
+    - text: "Đây là menu của chúng tôi:\n{menu_items}"
+  utter_ask_opening_hours:
+    - text: "Nhà hàng mở cửa từ 9:00 đến 21:00 mỗi ngày."
+  utter_ask_promotion:
+    - text: "Hiện tại chúng tôi có khuyến mãi giảm 10% cho đơn từ 200k trở lên!"
+  utter_cancel_order:
+    - text: "Đơn hàng của bạn đã được hủy. Bạn cần giúp gì khác không?"
+  utter_thanks:
+    - text: "Rất vui được phục vụ bạn!"
+  # utter_fallback:
+  #   - text: "Xin lỗi, tôi không hiểu. Bạn có thể diễn đạt lại không?"
+
+actions:
+  - action_show_menu
+  - action_add_to_order
+  - action_show_order
+  - action_execute_order
+  - action_cancel_order
+  - action_default_fallback
+  - action_ask_quantity
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

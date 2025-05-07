@@ -1,0 +1,74 @@
+# Rasa specific
+# -----------------------------------------------------------------------------
+# Cached data from Rasa NLU training
+.rasa/cache/
+.rasa/logs/
+
+# Model files - these are typically large and should be stored elsewhere (e.g., cloud storage)
+# or retrained in CI/CD. If you must track them, remove 'models/'
+models/*
+!models/.gitkeep # Optional: keep the directory structure if empty
+
+# Test results if generated locally and not needed in repo
+.rasa/results/
+
+# Coverage reports from tests
+.coverage
+coverage.xml
+htmlcov/
+
+# Virtual environment
+# -----------------------------------------------------------------------------
+venv/
+.venv/
+env/
+.env/
+ENV/
+.direnv/
+*.pyenvrc
+
+# Python bytecode and caches
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE / Editor specific files
+# -----------------------------------------------------------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.DS_Store # macOS
+
+# Sensitive information - BE VERY CAREFUL WITH THESE
+# -----------------------------------------------------------------------------
+# If credentials.yml contains sensitive keys, consider ignoring it
+# and using environment variables or a secrets manager instead.
+# If you choose to ignore it, you'll need a template or instructions
+# for others to create their own.
+# credentials.yml # Uncomment if you store secrets here and don't want to commit them
+
+# If endpoints.yml contains sensitive URLs or tokens for action servers/trackers
+# endpoints.yml # Uncomment if sensitive
+
+# Custom/Local configuration not meant for all developers
+# config_local.yml
+# local_settings.py
+
+# Operating System files
+# -----------------------------------------------------------------------------
+Thumbs.db # Windows
+ehthumbs.db # Windows
+
+# Log files
+# -----------------------------------------------------------------------------
+*.log
+logs/
+
+# Node.js dependencies (if you use any Node.js tools for frontend/etc.)
+# -----------------------------------------------------------------------------
+node_modules/
+npm-debug.log
+yarn-error.log
+

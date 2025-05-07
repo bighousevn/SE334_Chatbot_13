@@ -1,0 +1,58 @@
+version: "3.1"
+rules:
+  - rule: greet
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  - rule: goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+      - action: action_restart
+
+  - rule: fallback
+    steps:
+      - intent: nlu_fallback
+      - action: action_default_fallback
+
+  - rule: handle deny
+    steps:
+      - intent: deny
+      - action: action_cancel_order
+      - action: action_listen
+
+  - rule: Thêm vào đơn hàng khi có món và số lượng
+    steps:
+      - intent: order_food_specific
+        entities:
+          - dish
+          - quantity
+      - action: action_add_to_order
+      - action: action_show_order
+
+  - rule: show menu when asked
+    steps:
+      - intent: ask_menu
+      - action: action_show_menu
+
+  - rule: show menu when ordering
+    steps:
+      - intent: order_food
+      - action: action_show_menu
+
+  - rule: opening hours
+    steps:
+      - intent: ask_opening_hours
+      - action: utter_ask_opening_hours
+
+  - rule: promotion
+    steps:
+      - intent: ask_promotion
+      - action: utter_ask_promotion
+
+  - rule: cancel after adding
+    steps:
+      - action: action_add_to_order
+      - intent: cancel_order
+      - action: action_cancel_order
