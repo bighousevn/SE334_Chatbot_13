@@ -1,4 +1,5 @@
 version: "3.1"
+recipe: default.v1
 assistant_id: "restaurant_bot"
 language: "vi"
 pipeline:
@@ -7,23 +8,31 @@ pipeline:
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
   - name: DIETClassifier
-    epochs: 100
+    epochs: 200
+    entity_recognition: True
+    intent_classification: True
+    constrain_similarities: True
+    model_confidence: "softmax"
   - name: EntitySynonymMapper
   - name: ResponseSelector
     epochs: 100
   - name: FallbackClassifier
-    threshold: 0.7
+    threshold: 0.9
     ambiguity_threshold: 0.1
-    fallback_intent_name: "nlu_fallback"
+    fallback_intent_name: "fallback"
 
 policies:
   - name: MemoizationPolicy
-    max_history: 5
+    max_history: 8
+    priority: 3
   - name: RulePolicy
-    core_fallback_threshold: 0.7
+    core_fallback_threshold: 0.9
     core_fallback_action_name: "action_default_fallback"
     enable_fallback_prediction: true
+    priority: 10
   - name: TEDPolicy
-    max_history: 8 # Tăng max_history để xem xét lịch sử dài hơn
-    epochs: 200 # Tăng epochs để huấn luyện kỹ hơn
-
+    max_history: 10
+    epochs: 300
+    batch_size: 64
+    learning_rate: 0.001
+    priority: 1

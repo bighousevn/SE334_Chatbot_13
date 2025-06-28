@@ -5,16 +5,16 @@ stories:
     steps:
       - intent: ask_menu
       - action: action_show_menu
-      - intent: order_food_specific # User: "tôi muốn gọi phở bò"
+      - intent: order_food_specific
         entities:
           - dish: "phở bò"
-      - slot_was_set: # Đảm bảo slot dish được set
+      - slot_was_set:
           - dish: "phở bò"
-      - action: action_ask_quantity # Bot: "Bạn muốn mấy suất ạ?" (Cần tạo action này hoặc dùng utter_)
-      - intent: specify_quantity # User: "2 suất"
+      - action: action_ask_quantity
+      - intent: specify_quantity
         entities:
           - quantity: 2
-      - slot_was_set: # Đảm bảo slot quantity được set
+      - slot_was_set:
           - quantity: 2
       - action: action_add_to_order
       - action: action_show_order
@@ -22,18 +22,52 @@ stories:
       - intent: affirm
       - action: action_execute_order
 
-  - story: modify then cancel order
+  - story: cancel order after viewing
     steps:
       - intent: order_food_specific
         entities:
           - dish: "cơm gà"
-      - action: action_add_to_order
-      - action: action_show_order
-      - intent: specify_quantity
-        entities:
-          - quantity: 3
+          - quantity: "1"
       - action: action_add_to_order
       - action: action_show_order
       - action: action_listen
-      - intent: deny
+      - intent: cancel_order
       - action: action_cancel_order
+
+  - story: interactive_story_1
+    steps:
+      - intent: order_food_specific
+        entities:
+          - quantity: "1"
+          - dish: phở bò
+      - slot_was_set:
+          - dish: phở bò
+      - slot_was_set:
+          - quantity: "1"
+      - slot_was_set:
+          - order_list:
+              - []
+      - action: action_add_to_order
+      - slot_was_set:
+          - order_list:
+              - []
+              - dish: phở bò
+                quantity: 1
+                price: 50000
+      - slot_was_set:
+          - dish: null
+      - slot_was_set:
+          - quantity: null
+      - action: action_show_order
+      - intent: affirm
+      - slot_was_set:
+          - fallback_count: 1
+      - action: action_execute_order
+      - slot_was_set:
+          - order_list: []
+      - slot_was_set:
+          - dish: null
+      - slot_was_set:
+          - quantity: null
+      - slot_was_set:
+          - fallback_count: 0

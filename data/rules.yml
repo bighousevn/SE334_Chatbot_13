@@ -13,16 +13,10 @@ rules:
 
   - rule: fallback
     steps:
-      - intent: nlu_fallback
+      - intent: fallback
       - action: action_default_fallback
 
-  - rule: handle deny
-    steps:
-      - intent: deny
-      - action: action_cancel_order
-      - action: action_listen
-
-  - rule: Thêm vào đơn hàng khi có món và số lượng
+  - rule: add to order with dish and quantity
     steps:
       - intent: order_food_specific
         entities:
@@ -30,6 +24,15 @@ rules:
           - quantity
       - action: action_add_to_order
       - action: action_show_order
+      - action: action_listen
+
+  - rule: ask quantity when dish is specified
+    steps:
+      - intent: order_food_specific
+        entities:
+          - dish
+      - action: action_ask_quantity
+      - action: action_listen
 
   - rule: show menu when asked
     steps:
@@ -51,8 +54,16 @@ rules:
       - intent: ask_promotion
       - action: utter_ask_promotion
 
-  - rule: cancel after adding
+  - rule: cancel order
     steps:
-      - action: action_add_to_order
       - intent: cancel_order
       - action: action_cancel_order
+
+  - rule: confirm order
+    steps:
+      - intent: affirm
+      - action: action_execute_order
+      - action: action_listen
+    condition:
+      - slot_was_set:
+          - order_list

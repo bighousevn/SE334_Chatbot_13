@@ -10,9 +10,14 @@
 # Server which runs your custom actions.
 # https://rasa.com/docs/rasa/custom-actions
 
-#action_endpoint:
-#  url: "http://localhost:5055/webhook"
+action_endpoint:
+  url: "http://localhost:5055/webhook"
 
+# Optional but recommended for Facebook integration
+tracker_store:
+  type: SQL
+  dialect: "sqlite"
+  db: "rasa.db"
 # Tracker store which is used to store the conversations.
 # By default the conversations are stored in memory.
 # https://rasa.com/docs/rasa/tracker-stores
@@ -40,6 +45,3 @@
 #  username: username
 #  password: password
 #  queue: queue
-
-action_endpoint:
-  url: "http://localhost:5055/webhook" # URL mặc định của action server
