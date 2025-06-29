@@ -71,3 +71,61 @@ stories:
           - quantity: null
       - slot_was_set:
           - fallback_count: 0
+
+  - story: hỏi giờ mở cửa
+    steps:
+      - intent: ask_opening_hours
+      - action: utter_ask_opening_hours
+
+  - story: hỏi khuyến mãi
+    steps:
+      - intent: ask_promotion
+      - action: utter_ask_promotion
+
+  - story: cảm ơn bot
+    steps:
+      - intent: thanks
+      - action: utter_you_are_welcome
+
+  - story: xác nhận đặt hàng
+    steps:
+      - intent: order_food_specific
+        entities:
+          - dish: "bún chả"
+          - quantity: "2"
+      - action: action_add_to_order
+      - action: action_show_order
+      - action: action_listen
+      - intent: affirm
+      - action: action_execute_order
+
+  - story: huỷ đơn sau khi đặt
+    steps:
+      - intent: order_food_specific
+        entities:
+          - dish: "bánh mì"
+          - quantity: "1"
+      - action: action_add_to_order
+      - action: action_show_order
+      - action: action_listen
+      - intent: deny
+      - action: action_cancel_order
+
+  - story: fallback khi không hiểu
+    steps:
+      - intent: fallback
+      - action: action_default_fallback
+      - action: action_listen
+
+  - story: đặt món không đủ thông tin
+    steps:
+      - intent: order_food_specific
+        entities:
+          - dish: "bún bò"
+      - action: action_ask_quantity
+      - intent: specify_quantity
+        entities:
+          - quantity: 1
+      - action: action_add_to_order
+      - action: action_show_order
+      - action: action_listen
