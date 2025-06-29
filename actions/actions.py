@@ -4,6 +4,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.events import UserUtteranceReverted, EventType
 from rasa_sdk.events import SlotSet
+from pymongo import MongoClient
 
 
 MENU = {
@@ -22,9 +23,19 @@ class ActionShowMenu(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: DomainDict) -> List[Dict[Text, Any]]:
+        # Kết nối MongoDB để lấy menu động
+        client = MongoClient("mongodb://localhost:27017")
+        db = client["chatbot"]
+        foods = db["foods"].find({"available": True})
 
-        menu_items = "\n".join([f"- {dish}: {price}₫" for dish, price in MENU.items()])
-        dispatcher.utter_message(text=f"Đây là menu của chúng tôi:\n{menu_items}")
+        menu_items = []
+        for food in foods:
+            menu_items.append(f"- {food['name']}: {food['price']}₫")
+        if menu_items:
+            dispatcher.utter_message(text="Menu hôm nay:\n" + "\n".join(menu_items))
+        else:
+            dispatcher.utter_message(text="Hiện chưa có món nào trong menu.")
+        client.close()
         return []
 
 
