@@ -85,7 +85,7 @@ stories:
   - story: cảm ơn bot
     steps:
       - intent: thanks
-      - action: utter_you_are_welcome
+      - action: utter_thanks
 
   - story: xác nhận đặt hàng
     steps:

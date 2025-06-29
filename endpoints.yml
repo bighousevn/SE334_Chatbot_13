@@ -13,11 +13,15 @@
 action_endpoint:
   url: "http://localhost:5055/webhook"
 
-# Optional but recommended for Facebook integration
 tracker_store:
-  type: SQL
-  dialect: "sqlite"
-  db: "rasa.db"
+  type: mongod
+  url: mongodb://localhost:27017
+  db: chatbot
+# Optional but recommended for Facebook integration
+# tracker_store:
+#   type: SQL
+#   dialect: "sqlite"
+#   db: "rasa.db"
 # Tracker store which is used to store the conversations.
 # By default the conversations are stored in memory.
 # https://rasa.com/docs/rasa/tracker-stores

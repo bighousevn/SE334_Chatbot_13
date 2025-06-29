@@ -59,11 +59,13 @@ rules:
       - intent: cancel_order
       - action: action_cancel_order
 
-  - rule: confirm order
+  - rule: cảm ơn bot
     steps:
-      - intent: affirm
-      - action: action_execute_order
-      - action: action_listen
-    condition:
-      - slot_was_set:
-          - order_list
+      - intent: thanks
+      - action: utter_thanks
+
+  - rule: show order
+    steps:
+      - intent: show_order
+      - action: action_show_order
+

@@ -15,6 +15,7 @@ intents:
   - order_food_specific
   - specify_quantity
   - thanks
+  - show_order 
 entities:
   - dish
   - quantity

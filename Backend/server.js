@@ -55,6 +55,16 @@ const connectWithRetry = async () => {
 };
 connectWithRetry();
 
+// Định nghĩa schema và model cho món ăn (Food)
+const foodSchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true },
+  price: { type: Number, required: true },
+  description: { type: String },
+  image: { type: String },
+  available: { type: Boolean, default: true },
+});
+const Food = mongoose.model("Food", foodSchema);
+
 // API Health Check
 app.get("/health", (req, res) => {
   res.status(200).json({
@@ -79,8 +89,7 @@ app.post("/chat", async (req, res) => {
 
     // Gọi Rasa API
     const rasaResponse = await axios.post(
-      `${
-        process.env.RASA_URL || "http://localhost:5005"
+      `${process.env.RASA_URL || "http://localhost:5005"
       }/webhooks/rest/webhook`,
       {
         sender: sessionId,
@@ -142,6 +151,31 @@ async function saveChatHistory(req, sessionId, userMessage, botResponses) {
     logger.error("Lỗi lưu lịch sử chat:", err);
   }
 }
+
+// API thêm món ăn mới
+app.post("/foods", async (req, res) => {
+  try {
+    const { name, price, description, image, available } = req.body;
+    const food = new Food({ name, price, description, image, available });
+    await food.save();
+    logger.info("Đã thêm món ăn mới vào foods", { name });
+    res.status(201).json(food);
+  } catch (err) {
+    logger.error("Lỗi thêm món ăn:", err);
+    res.status(500).json({ error: "Lỗi server khi thêm món ăn" });
+  }
+});
+
+// API lấy danh sách món ăn
+app.get("/foods", async (req, res) => {
+  try {
+    const foods = await Food.find({ available: true });
+    res.json(foods);
+  } catch (err) {
+    logger.error("Lỗi lấy danh sách món ăn:", err);
+    res.status(500).json({ error: "Lỗi server khi lấy danh sách món ăn" });
+  }
+});
 
 // Xử lý lỗi toàn cục
 app.use((err, req, res, next) => {

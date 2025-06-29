@@ -44,31 +44,78 @@ nlu:
     examples: |
       - nhà hàng mở cửa mấy giờ
       - giờ làm việc
+      - mấy giờ mở cửa
+      - mấy giờ đóng cửa
+      - thời gian hoạt động
+      - khi nào mở cửa
+      - khi nào đóng cửa
   - intent: ask_promotion
     examples: |
       - có khuyến mãi gì không
       - giảm giá hôm nay
+      - có ưu đãi gì không
+      - hôm nay có giảm giá không
+      - chương trình khuyến mãi
+      - có mã giảm giá không
+      - có gì đặc biệt hôm nay không
   - intent: cancel_order
     examples: |
       - huỷ đơn
       - bỏ đơn
-      - không
-      - từ chối
+      - huỷ đặt món
+      - thôi không đặt nữa
   - intent: thanks
     examples: |
       - cảm ơn
       - thanks
-  - intent: fallback
-    examples: |
-      - Tôi không biết
-      - Cái gì vậy
-      - Hả?
+      - cảm ơn bạn nhiều
+      - cảm ơn nhé
+      - rất cảm ơn
+      - cảm ơn nhiều lắm
+      - thank you
+
   - intent: affirm
     examples: |
       - vâng
       - ok
       - đồng ý
       - có
+      - đúng rồi
+      - chuẩn luôn
+      - chắc chắn
+      - dạ
+      - ừ
+      - ừ đúng rồi
+
   - intent: deny
     examples: |
-      -...
+      - không
+      - từ chối
+      - không phải
+      - không đồng ý
+      - không đâu
+      - chưa
+      - thôi
+      - huỷ
+      - bỏ đi
+      - không cần nữa
+
+  - intent: fallback
+    examples: |
+      - Tôi không biết
+      - Cái gì vậy
+      - Hả?
+      - bạn nói gì vậy
+      - tôi chưa hiểu
+      - nói lại được không
+      - không rõ
+      - ???
+      - ý bạn là gì
+  - intent: show_order
+    examples: |
+      - đơn hàng của tôi
+      - cho tôi xem đơn hàng
+      - xem đơn hàng
+      - tôi muốn xem đơn hàng
+      - kiểm tra đơn hàng
+      - đơn hàng

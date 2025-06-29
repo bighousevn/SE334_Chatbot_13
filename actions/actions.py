@@ -28,61 +28,6 @@ class ActionShowMenu(Action):
         return []
 
 
-# class ActionAddToOrder(Action):
-    def name(self) -> str:
-        return "action_add_to_order"
-
-    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict) -> list:
-        # Get latest entities first
-        entities = tracker.latest_message.get("entities", [])
-        latest_dish = next((e["value"] for e in entities if e["entity"] == "dish"), None)
-        latest_quantity = next((e["value"] for e in entities if e["entity"] == "quantity"), None)
-
-        # Get slots
-        dish = latest_dish or tracker.get_slot("dish")
-        quantity = latest_quantity or tracker.get_slot("quantity")
-        order_list = tracker.get_slot("order_list") or []
-
-        # If we have both dish and quantity
-        if dish and quantity:
-            try:
-                quantity_val = int(quantity)
-                dish_name = dish.lower()
-                
-                if dish_name in MENU:
-                    price = MENU[dish_name]
-                    # Check if order_list is not empty
-                    if order_list:
-                        dispatcher.utter_message(text="Đơn hàng đã có món. Vui lòng kiểm tra đơn hàng hoặc hủy trước khi thêm mới.")
-                        return [SlotSet("dish", None), SlotSet("quantity", None)]
-                    order_item = {
-                        "dish": dish,
-                        "quantity": quantity_val,
-                        "price": price
-                    }
-                    order_list.append(order_item)
-                    dispatcher.utter_message(text=f"Đã thêm {quantity_val} phần {dish} vào đơn hàng.")
-                    return [
-                        SlotSet("order_list", order_list),
-                        SlotSet("dish", None),
-                        SlotSet("quantity", None)
-                    ]
-                else:
-                    dispatcher.utter_message(text=f"Xin lỗi, chúng tôi không có món '{dish}'.")
-                    return [SlotSet("dish", None)]
-            except (ValueError, TypeError):
-                dispatcher.utter_message(text=f"Số lượng '{quantity}' không hợp lệ.")
-                return [SlotSet("quantity", None)]
-        
-        # If only dish is present
-        elif dish:
-            return [
-                SlotSet("dish", dish),
-                SlotSet("quantity", None)
-            ]
-        
-        return []
-
 class ActionAddToOrder(Action):
     def name(self) -> str:
         return "action_add_to_order"
@@ -234,3 +179,33 @@ class ActionRestart(Action):
             tracker: Tracker,
             domain: DomainDict) -> List[Dict[Text, Any]]:
         return [SlotSet("order_list", []), SlotSet("dish", None), SlotSet("quantity", None), SlotSet("fallback_count", 0)]
+
+class ActionYouAreWelcome(Action):
+    def name(self) -> Text:
+        return "utter_you_are_welcome"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: DomainDict) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message(text="Không có gì, rất hân hạnh được phục vụ bạn!")
+        return []
+
+class ActionAskOpeningHours(Action):
+    def name(self) -> Text:
+        return "utter_ask_opening_hours"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: DomainDict) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message(text="Nhà hàng mở cửa từ 7h sáng đến 10h tối mỗi ngày.")
+        return []
+
+class ActionAskPromotion(Action):
+    def name(self) -> Text:
+        return "utter_ask_promotion"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: DomainDict) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message(text="Hôm nay có khuyến mãi: Giảm 10% cho đơn hàng trên 200.000đ!")
+        return []
