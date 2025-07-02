@@ -5,8 +5,11 @@ from rasa_sdk.types import DomainDict
 from rasa_sdk.events import UserUtteranceReverted, EventType
 from rasa_sdk.events import SlotSet
 from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
 
-MONGODB_URI = "mongodb+srv://ngoquangkhoa02:7fUa4ArR4H3XJPwX@cluster0.t45ojwq.mongodb.net/chatbot?retryWrites=true&w=majority&appName=Cluster0"
+load_dotenv(dotenv_path=".env")  # Nạp biến môi trường từ file .env ở thư mục gốc
+MONGODB_URI = os.environ.get("MONGODB_URI")
 
 # MENU = {
 #     "phở bò": 50000,
