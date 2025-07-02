@@ -15,8 +15,10 @@ action_endpoint:
 
 tracker_store:
   type: mongod
-  url: mongodb://localhost:27017
+  url: ${MONGODB_URI}
   db: chatbot
+  username: ${MONGODB_USER}
+  password: ${MONGODB_PASS}
 # Optional but recommended for Facebook integration
 # tracker_store:
 #   type: SQL
