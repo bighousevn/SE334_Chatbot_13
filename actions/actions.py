@@ -27,19 +27,23 @@ class ActionShowMenu(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: DomainDict) -> List[Dict[Text, Any]]:
-        # Kết nối MongoDB Atlas để lấy menu động
-        client = MongoClient(MONGODB_URI)
-        db = client["chatbot"]
-        foods = db["foods"].find({"available": True})
+        try:
+            client = MongoClient(MONGODB_URI)
+            db = client["chatbot"]
+            foods = db["foods"].find({"available": True})
 
-        menu_items = []
-        for food in foods:
-            menu_items.append(f"- {food['name']}: {food['price']}₫")
-        if menu_items:
-            dispatcher.utter_message(text="Menu hôm nay:\n" + "\n".join(menu_items))
-        else:
-            dispatcher.utter_message(text="Hiện chưa có món nào trong menu.")
-        client.close()
+            menu_items = []
+            for food in foods:
+                menu_items.append(f"- {food['name']}: {food['price']}₫")
+            if menu_items:
+                dispatcher.utter_message(text="Menu hôm nay:\n" + "\n".join(menu_items))
+            else:
+                dispatcher.utter_message(text="Hiện chưa có món nào trong menu.")
+            client.close()
+        except Exception as e:
+            dispatcher.utter_message(text="Không thể kết nối tới cơ sở dữ liệu. Vui lòng thử lại sau.")
+            import logging
+            logging.error(f"MongoDB connection error: {e}")
         return []
 
 
