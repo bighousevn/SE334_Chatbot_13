@@ -39,7 +39,8 @@ app.use((req, res, next) => {
 const connectWithRetry = async () => {
   try {
     await mongoose.connect(
-      process.env.MONGODB_URI || "mongodb://localhost:27017/chatbot",
+      // process.env.MONGODB_URI || "mongodb://localhost:27017/chatbot",
+      process.env.MONGODB_URI,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,

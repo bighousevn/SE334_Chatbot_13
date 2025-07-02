@@ -6,15 +6,16 @@ from rasa_sdk.events import UserUtteranceReverted, EventType
 from rasa_sdk.events import SlotSet
 from pymongo import MongoClient
 
+MONGODB_URI = "mongodb+srv://ngoquangkhoa02:7fUa4ArR4H3XJPwX@cluster0.t45ojwq.mongodb.net/chatbot?retryWrites=true&w=majority&appName=Cluster0"
 
-MENU = {
-    "phở bò": 50000,
-    "cơm gà": 60000,
-    "bánh mì": 30000,
-    "trà sữa": 40000,
-    "gỏi cuốn": 20000,
-    "bún chả": 55000
-}
+# MENU = {
+#     "phở bò": 50000,
+#     "cơm gà": 60000,
+#     "bánh mì": 30000,
+#     "trà sữa": 40000,
+#     "gỏi cuốn": 20000,
+#     "bún chả": 55000
+# }
 
 class ActionShowMenu(Action):
     def name(self) -> Text:
@@ -23,8 +24,8 @@ class ActionShowMenu(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: DomainDict) -> List[Dict[Text, Any]]:
-        # Kết nối MongoDB để lấy menu động
-        client = MongoClient("mongodb://localhost:27017")
+        # Kết nối MongoDB Atlas để lấy menu động
+        client = MongoClient(MONGODB_URI)
         db = client["chatbot"]
         foods = db["foods"].find({"available": True})
 
@@ -62,16 +63,22 @@ class ActionAddToOrder(Action):
             try:
                 quantity_val = int(quantity)
                 dish_name = dish.lower()
-                
-                if dish_name in MENU:
-                    price = MENU[dish_name]
+
+                # Kết nối MongoDB Atlas để lấy giá món ăn động
+                client = MongoClient(MONGODB_URI)
+                db = client["chatbot"]
+                food = db["foods"].find_one({"name": {"$regex": f"^{dish_name}$", "$options": "i"}, "available": True})
+                client.close()
+
+                if food:
+                    price = food["price"]
                     order_item = {
-                        "dish": dish,
+                        "dish": food["name"],
                         "quantity": quantity_val,
                         "price": price
                     }
                     order_list.append(order_item)
-                    dispatcher.utter_message(text=f"Đã thêm {quantity_val} phần {dish} vào đơn hàng.")
+                    dispatcher.utter_message(text=f"Đã thêm {quantity_val} phần {food['name']} vào đơn hàng.")
                     return [
                         SlotSet("order_list", order_list),
                         SlotSet("dish", None),
