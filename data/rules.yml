@@ -52,7 +52,7 @@ rules:
   - rule: promotion
     steps:
       - intent: ask_promotion
-      - action: utter_ask_promotion
+      - action: action_ask_promotion
 
   - rule: cancel order
     steps:

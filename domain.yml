@@ -69,8 +69,6 @@ responses:
         {menu_items}
   utter_ask_opening_hours:
     - text: Nhà hàng mở cửa từ 9:00 đến 21:00 mỗi ngày.
-  utter_ask_promotion:
-    - text: Hiện tại chúng tôi có khuyến mãi giảm 10% cho đơn từ 200k trở lên!
   utter_cancel_order:
     - text: Đơn hàng của bạn đã được hủy. Bạn cần giúp gì khác không?
   utter_thanks:
@@ -85,6 +83,7 @@ actions:
   - action_ask_quantity
   - action_my_custom_action
   - action_restart
+  - action_ask_promotion
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

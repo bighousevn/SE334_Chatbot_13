@@ -130,11 +130,31 @@ class ActionShowOrder(Action):
             total += line_total
 
         summary_text = "\n".join(summary)
-        # Thông báo khuyến mãi nếu đủ điều kiện
-        if total >= 200000:
-            discount = int(total * 0.1)
+
+        # Lấy danh sách khuyến mãi động từ MongoDB
+        try:
+            client = MongoClient(MONGODB_URI)
+            db = client["chatbot"]
+            promotions = list(db["promotions"].find())
+            client.close()
+        except Exception as e:
+            promotions = []
+            import logging
+            logging.error(f"MongoDB promotions error: {e}")
+
+        # Tìm khuyến mãi phù hợp nhất
+        best_promo = None
+        for promo in sorted(promotions, key=lambda x: x.get("min_total", 0), reverse=True):
+            if total >= promo.get("min_total", 0):
+                best_promo = promo
+                break
+
+        if best_promo:
+            percent = best_promo.get("discount_percent", 0)
+            discount = int(total * percent / 100)
             total_after = total - discount
-            dispatcher.utter_message(text=f"Đơn hàng của bạn:\n{summary_text}\nTổng cộng: {total}₫\nĐơn hàng của bạn đủ điều kiện nhận khuyến mãi 10% (-{discount}₫). Số tiền cần thanh toán: {total_after}₫\nBạn có muốn xác nhận không?")
+            desc = best_promo.get("description", f"Giảm {percent}% cho đơn hàng từ {best_promo.get('min_total', 0)}₫")
+            dispatcher.utter_message(text=f"Đơn hàng của bạn:\n{summary_text}\nTổng cộng: {total}₫\n{desc} (-{discount}₫). Số tiền cần thanh toán: {total_after}₫\nBạn có muốn xác nhận không?")
         else:
             dispatcher.utter_message(text=f"Đơn hàng của bạn:\n{summary_text}\nTổng cộng: {total}₫\nBạn có muốn xác nhận không?")
         return []
@@ -231,10 +251,30 @@ class ActionAskOpeningHours(Action):
 
 class ActionAskPromotion(Action):
     def name(self) -> Text:
-        return "utter_ask_promotion"
+        return "action_ask_promotion"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: DomainDict) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="Hôm nay có khuyến mãi: Giảm 10% cho đơn hàng trên 200.000₫!")
+        try:
+            client = MongoClient(MONGODB_URI)
+            db = client["chatbot"]
+            promotions = list(db["promotions"].find())
+            client.close()
+        except Exception as e:
+            promotions = []
+            import logging
+            logging.error(f"MongoDB promotions error: {e}")
+
+        if promotions:
+            promo_lines = []
+            for promo in sorted(promotions, key=lambda x: x.get("min_total", 0)):
+                percent = promo.get("discount_percent", 0)
+                min_total = promo.get("min_total", 0)
+                desc = promo.get("description", f"Giảm {percent}% cho đơn hàng từ {min_total}₫")
+                promo_lines.append(f"- {desc}")
+            promo_text = "Các chương trình khuyến mãi hiện tại:\n" + "\n".join(promo_lines)
+            dispatcher.utter_message(text=promo_text)
+        else:
+            dispatcher.utter_message(text="Hiện tại chưa có chương trình khuyến mãi nào.")
         return []

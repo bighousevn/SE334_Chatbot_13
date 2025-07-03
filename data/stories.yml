@@ -80,7 +80,7 @@ stories:
   - story: hỏi khuyến mãi
     steps:
       - intent: ask_promotion
-      - action: utter_ask_promotion
+      - action: action_ask_promotion
 
   - story: cảm ơn bot
     steps:
