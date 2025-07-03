@@ -120,19 +120,23 @@ class ActionShowOrder(Action):
         summary = []
         total = 0
         for item in order_list:
-            # Số lượng trong order_list giờ đã là một con số
             try:
                 quantity = int(item["quantity"])
             except (ValueError, TypeError, KeyError):
-                continue # Bỏ qua các mục bị lỗi trong giỏ hàng
-
+                continue
             price = item["price"]
             line_total = quantity * price
             summary.append(f"- {quantity} x {item['dish']}: {line_total}₫")
             total += line_total
 
         summary_text = "\n".join(summary)
-        dispatcher.utter_message(text=f"Đơn hàng của bạn:\n{summary_text}\nTổng cộng: {total}₫\nBạn có muốn xác nhận không?")
+        # Thông báo khuyến mãi nếu đủ điều kiện
+        if total >= 200000:
+            discount = int(total * 0.1)
+            total_after = total - discount
+            dispatcher.utter_message(text=f"Đơn hàng của bạn:\n{summary_text}\nTổng cộng: {total}₫\nĐơn hàng của bạn đủ điều kiện nhận khuyến mãi 10% (-{discount}₫). Số tiền cần thanh toán: {total_after}₫\nBạn có muốn xác nhận không?")
+        else:
+            dispatcher.utter_message(text=f"Đơn hàng của bạn:\n{summary_text}\nTổng cộng: {total}₫\nBạn có muốn xác nhận không?")
         return []
 
 class ActionExecuteOrder(Action):
@@ -148,7 +152,7 @@ class ActionExecuteOrder(Action):
             dispatcher.utter_message(text="Không có đơn hàng để xác nhận.")
             return []
 
-        dispatcher.utter_message(text="Đơn hàng của bạn đã được xác nhận! Cảm ơn bạn.")
+        dispatcher.utter_message(text="Đơn hàng của bạn đã được xác nhận! Cảm ơn bạn!")
 
         return [SlotSet("order_list", []), SlotSet("dish", None), SlotSet("quantity", None), SlotSet("fallback_count", 0)]
 
@@ -232,5 +236,5 @@ class ActionAskPromotion(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: DomainDict) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="Hôm nay có khuyến mãi: Giảm 10% cho đơn hàng trên 200.000đ!")
+        dispatcher.utter_message(text="Hôm nay có khuyến mãi: Giảm 10% cho đơn hàng trên 200.000₫!")
         return []
