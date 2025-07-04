@@ -7,9 +7,9 @@ stories:
       - action: action_show_menu
       - intent: order_food_specific
         entities:
-          - dish: "phở bò"
+          - dish: "bún bò"
       - slot_was_set:
-          - dish: "phở bò"
+          - dish: "bún bò"
       - action: action_ask_quantity
       - intent: specify_quantity
         entities:
@@ -39,9 +39,9 @@ stories:
       - intent: order_food_specific
         entities:
           - quantity: "1"
-          - dish: phở bò
+          - dish: bún bò
       - slot_was_set:
-          - dish: phở bò
+          - dish: bún bò
       - slot_was_set:
           - quantity: "1"
       - slot_was_set:
@@ -51,7 +51,7 @@ stories:
       - slot_was_set:
           - order_list:
               - []
-              - dish: phở bò
+              - dish: bún bò
                 quantity: 1
                 price: 50000
       - slot_was_set:

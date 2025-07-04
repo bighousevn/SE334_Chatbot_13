@@ -3,7 +3,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.events import UserUtteranceReverted, EventType
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet, Restarted
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
@@ -220,14 +220,18 @@ class ActionAskQuantity(Action):
             dispatcher.utter_message(text=f"Bạn muốn gọi bao nhiêu phần {dish}?")
         return []
 
+
+
 class ActionRestart(Action):
     def name(self) -> Text:
         return "action_restart"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
-            domain: DomainDict) -> List[Dict[Text, Any]]:
-        return [SlotSet("order_list", []), SlotSet("dish", None), SlotSet("quantity", None), SlotSet("fallback_count", 0)]
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message(text="Cuộc trò chuyện đã được khởi động lại. Bạn muốn gọi món gì?")
+        return [Restarted()]
+
 
 class ActionYouAreWelcome(Action):
     def name(self) -> Text:

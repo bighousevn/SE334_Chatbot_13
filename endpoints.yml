@@ -14,7 +14,7 @@ action_endpoint:
   url: "http://localhost:5055/webhook"
 
 tracker_store:
-  type: mongod
+  type: mongodb
   url: ${MONGODB_URI}
   db: chatbot
   username: ${MONGODB_USER}

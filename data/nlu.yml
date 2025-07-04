@@ -28,12 +28,12 @@ nlu:
       - tôi muốn order
   - intent: order_food_specific
     examples: |
-      - đặt [1](quantity) phần [phở bò](dish)
+      - đặt [1](quantity) phần [bún bò](dish)
       - cho tôi gọi [2](quantity) phần [cơm gà](dish)
       - tôi muốn [3](quantity) phần [bún chả](dish)
       - đặt [phở bò](dish)
       - cho tôi [1](quantity) cái [bánh mì](dish)
-      - đăt [1](quantity) phần [phở bò](dish)
+      - đăt [1](quantity) phần [bún bò](dish)
   - intent: specify_quantity
     examples: |
       - [3](quantity)

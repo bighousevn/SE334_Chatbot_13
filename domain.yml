@@ -15,7 +15,7 @@ intents:
   - order_food_specific
   - specify_quantity
   - thanks
-  - show_order 
+  - show_order
 entities:
   - dish
   - quantity
@@ -86,4 +86,4 @@ actions:
   - action_ask_promotion
 session_config:
   session_expiration_time: 60
-  carry_over_slots_to_new_session: true
+  carry_over_slots_to_new_session: false
